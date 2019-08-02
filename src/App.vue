@@ -1,49 +1,23 @@
 <template>
-  <div class="app">
-    <List name="ON-HOLD" color="orange"/>
-    <List name="IN-PROGRESS" color="blue"/>
-    <List name="NEEDS-REVIEW" color="yellow"/>
-    <List name="APPROVED" color="green"/>
-  </div>
+  <section class="app">
+    <div class="wrapper">
+      <List name="ON-HOLD" color="orange" :arr="$store.state.onHoldCards"/>
+      <List name="IN-PROGRESS" color="blue" :arr="$store.state.inProgressCards"/>
+      <List name="NEEDS-REVIEW" color="yellow" :arr="$store.state.needsReviewCards"/>
+      <List name="APPROVED" color="green" :arr="$store.state.approvedCards"/>
+    </div>
+  </section>
 </template>
 
 <script>
-    import List from './components/List';
+    import ListWrapper from './components/ListWrapper/ListWrapper';
 
     export default {
         name: "main-page",
         components: {
-            List
-        },
-        data() {
-            return {}
-        },
-        methods: {},
-        computed: {}
+            List: ListWrapper
+        }
     };
 </script>
 
-<style lang="sass">
-  *
-    padding: 0
-    margin: 0
-    box-sizing: border-box
-
-    body
-      background-color: gray
-      color: white
-      padding-top: 50px
-
-      button
-        color: white
-        outline: 0
-        border: 0
-
-      .app
-        display: flex
-        justify-content: space-around
-        align-items: flex-start
-        width: 100%
-        height: 100%
-
-</style>
+<style lang="sass" src="./App.sass"></style>
