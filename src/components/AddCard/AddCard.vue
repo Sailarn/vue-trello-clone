@@ -34,10 +34,12 @@
             };
         },
         methods: {
+            // clear input when close button was clicked
             closeInput() {
                 this.showInput = false;
                 this.cardInput = '';
             },
+            // add card to current list
             addCard() {
                 const itemCard = {
                     id: uuidv4().slice(0, 10),

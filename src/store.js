@@ -11,10 +11,10 @@ export default new Vuex.Store({
     needsReviewCards: [],
     approvedCards: []
   },
+  //plugin to save state in local storage if page was reloaded
   plugins: [createPersistedState()],
   mutations: {
     addCard(state, payload) {
-      console.log(payload)
       switch (payload.name) {
         case 'ON-HOLD':
           state.onHoldCards = payload.list;
@@ -31,7 +31,6 @@ export default new Vuex.Store({
         default:
           return;
       }
-      console.log('STATE', state)
     }
   },
   actions: {

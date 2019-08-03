@@ -2,38 +2,29 @@
   <div class="list-wrapper">
     <div class="list-group">
       <h4 class="list-name" :style="{backgroundColor: color}">{{name}} ({{listLength}})</h4>
-      <draggable
-        class="draggable-wrapper"
-        tag="div"
-        v-model="list"
-        v-bind="dragOptions"
-        @start="onDragStart"
-        @end="onDragEnd"
-      >
-        <div
-          class="list-group-item"
-          v-for="element in list"
-          :key="element.id"
-        >
-          <span class="delete-item" @click="deleteItem(element.id)">x</span>
-          <span>Id: {{element.id}}</span>
-          <span>{{element.text}}</span>
-        </div>
-      </draggable>
-      <AddCard :list="list"/>
+      <DraggableList
+        :list="list"
+        @deleteItem="deleteItem"
+        @updateItem="onUpdateItem"
+        @updateList="onListUpdate"
+      />
+      <AddCard
+        :list="list"
+        :name="name"
+      />
     </div>
   </div>
 </template>
 
 <script>
-    import draggable from "vuedraggable";
-    import AddCard from "../AddCard/AddCard";
+    import AddCard from "../AddCard/AddCard"; // component for adding new cards
+    import DraggableList from "../DraggableList/DraggableList"; // component for showing cards and control them
 
     export default {
         name: "list-component",
         props: ['name', 'color', 'arr'],
         components: {
-            draggable,
+            DraggableList,
             AddCard
         },
         data() {
@@ -43,44 +34,42 @@
                 length: 0
             };
         },
+        // when component created - set initial state (because we can't change state directly)
         created() {
             this.list = this.arr;
-            this.length = this.list.length;
-        },
-        updated() {
-            if (this.list.length !== this.length) {
-                this.length = this.list.length;
-                const payload = {
-                    list: this.list,
-                    name: this.name
-                };
-                this.$store.commit('addCard', payload);
-            } else {
-                this.length = this.list.length;
-            }
+            this.length = this.list.length; // to see if state changed after drag'n'drop
         },
         methods: {
-            onDragStart() {
-                this.drag = true;
+            // after event will be emitted on Draggable List - function will update global state
+            onUpdateItem(list) {
+                if (list.length !== this.length) {
+                    this.length = list.length;
+                    const payload = {
+                        list: list,
+                        name: this.name
+                    };
+                    this.$store.dispatch('mutateCard', payload);
+                } else {
+                    this.length = list.length;
+                }
             },
-            onDragEnd() {
-                this.drag = false;
+            // work as previous function but delete card
+            deleteItem(list) {
+                const payload = {
+                    list,
+                    name: this.name
+                };
+                this.$store.dispatch('mutateCard', payload);
             },
-            deleteItem(item) {
-                this.list = this.list.filter(task => task.id !== item);
-                this.$store.commit('addCard', this.list);
+            // event to update current list (to synchronise lists after drag'n'drop)
+            onListUpdate(list) {
+                this.list = list;
             }
         },
         computed: {
+            // to control count of cards in list
             listLength() {
                 return this.list.length;
-            },
-            dragOptions() {
-                return {
-                    animation: 200,
-                    group: "description",
-                    disabled: false
-                };
             }
         }
     }
