@@ -31,7 +31,12 @@ export default new Vuex.Store({
         default:
           return;
       }
+      console.log('STATE', state)
     }
   },
-  actions: {},
+  actions: {
+    mutateCard({commit}, payload) {
+      commit('addCard', payload);
+    }
+  },
 });

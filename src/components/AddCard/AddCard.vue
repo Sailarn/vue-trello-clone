@@ -7,7 +7,7 @@
         />
       <div>
         <button @click="addCard">Добавить карточку</button>
-        <span @click="showInput = false">X</span>
+        <span @click="closeInput">X</span>
       </div>
     </div>
     <button
@@ -26,25 +26,33 @@
         components: {
             draggable
         },
-        props: ['list'],
+        props: ['list', 'name'],
         data() {
             return {
                 showInput: false,
-                cardInput: '',
+                cardInput: ''
             };
         },
         methods: {
+            closeInput() {
+                this.showInput = false;
+                this.cardInput = '';
+            },
             addCard() {
-                const payload = {
+                const itemCard = {
                     id: uuidv4().slice(0, 10),
                     text: this.cardInput,
+                };
+                this.list.push(itemCard);
+                const payload = {
+                    list: this.list,
                     name: this.name
                 };
-                this.list.push(payload);
-                this.$store.commit('addCard', this.list);
+                this.$store.dispatch('mutateCard', payload);
                 this.showInput = false;
                 this.cardInput = '';
             }
         }
     }
 </script>
+<style lang="sass" src="./add-card.sass"></style>
