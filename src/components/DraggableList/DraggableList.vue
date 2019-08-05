@@ -2,14 +2,14 @@
   <draggable
     class="draggable-wrapper"
     tag="div"
-    v-model="innerList"
+    v-model="listArray"
     v-bind="dragOptions"
     @start="drag = true"
     @end="drag = false"
   >
     <div
       class="list-group-item"
-      v-for="element in innerList"
+      v-for="element in listArray"
       :key="element.id"
     >
       <span class="delete-item" @click="deleteItem(element.id)">x</span>
@@ -29,28 +29,33 @@
         },
         data() {
             return {
-                drag: false,
-                innerList: []
+                drag: false
             };
-        },
-        // initialise new variable to manipulate with list
-        created() {
-            this.innerList = this.list;
         },
         // control drag'n'drop changes and emit event to parent component
         updated() {
-            this.$emit('updateItem', this.innerList);
-            this.$emit('updateList', this.innerList);
+            this.updateListArray(this.listArray);
         },
         methods: {
-            // emit delete event to parent component
+            // simplify this.listArray = this.listArray
+            updateListArray(list) {
+                this.listArray = list;
+            },
+            // set updated array to parent component
             deleteItem(item) {
-                this.innerList = this.innerList.filter(task => task.id !== item);
-                this.$emit('deleteItem', this.innerList);
-                this.$emit('updateList', this.innerList);
+                this.listArray = this.listArray.filter(task => task.id !== item);
             }
         },
         computed: {
+            // get list from props and set when updated hook triggered
+            listArray: {
+                get() {
+                    return this.list;
+                },
+                set(payload) {
+                    this.$emit('updateItem', payload);
+                }
+            },
             // just drag options
             dragOptions() {
                 return {

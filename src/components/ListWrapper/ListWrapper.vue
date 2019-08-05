@@ -3,14 +3,12 @@
     <div class="list-group">
       <h4 class="list-name" :style="{backgroundColor: color}">{{name}} ({{listLength}})</h4>
       <DraggableList
-        :list="list"
-        @deleteItem="deleteItem"
+        :list="listArray"
         @updateItem="onUpdateItem"
-        @updateList="onListUpdate"
       />
       <AddCard
-        :list="list"
-        :name="name"
+        :list="listArray"
+        @updateItem="onUpdateItem"
       />
     </div>
   </div>
@@ -27,49 +25,29 @@
             DraggableList,
             AddCard
         },
-        data() {
-            return {
-                list: [],
-                drag: false,
-                length: 0
-            };
-        },
-        // when component created - set initial state (because we can't change state directly)
-        created() {
-            this.list = this.arr;
-            this.length = this.list.length; // to see if state changed after drag'n'drop
-        },
         methods: {
-            // after event will be emitted on Draggable List - function will update global state
+            // update vuex store
             onUpdateItem(list) {
-                if (list.length !== this.length) {
-                    this.length = list.length;
-                    const payload = {
-                        list: list,
-                        name: this.name
-                    };
-                    this.$store.dispatch('mutateCard', payload);
-                } else {
-                    this.length = list.length;
-                }
-            },
-            // work as previous function but delete card
-            deleteItem(list) {
                 const payload = {
-                    list,
+                    list: list,
                     name: this.name
                 };
-                this.$store.dispatch('mutateCard', payload);
-            },
-            // event to update current list (to synchronise lists after drag'n'drop)
-            onListUpdate(list) {
-                this.list = list;
+                this.listArray = payload;
             }
         },
         computed: {
+            // getter and setter of current list
+            listArray: {
+                get() {
+                    return this.arr;
+                },
+                set(payload) {
+                    this.$store.dispatch('mutateCard', payload);
+                }
+            },
             // to control count of cards in list
             listLength() {
-                return this.list.length;
+                return this.arr.length;
             }
         }
     }

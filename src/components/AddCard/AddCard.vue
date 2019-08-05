@@ -26,7 +26,7 @@
         components: {
             draggable
         },
-        props: ['list', 'name'],
+        props: ['list'],
         data() {
             return {
                 showInput: false,
@@ -45,14 +45,25 @@
                     id: uuidv4().slice(0, 10),
                     text: this.cardInput,
                 };
-                this.list.push(itemCard);
-                const payload = {
-                    list: this.list,
-                    name: this.name
-                };
-                this.$store.dispatch('mutateCard', payload);
+                this.listArray.push(itemCard);
+                this.setUpdatedList(this.listArray);
                 this.showInput = false;
                 this.cardInput = '';
+            },
+            // just to simplify update this.listArray = this.listArray
+            setUpdatedList(list) {
+                this.listArray = list;
+            }
+        },
+        computed: {
+            // get list from props and emit update event to parent component
+            listArray: {
+                get() {
+                    return this.list;
+                },
+                set(payload) {
+                    this.$emit('updateItem', payload);
+                }
             }
         }
     }
