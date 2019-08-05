@@ -2,10 +2,10 @@
 <template>
   <section class="app" id="app">
     <div class="wrapper">
-      <List name="ON-HOLD" color="orange" :arr="$store.state.onHoldCards"/>
-      <List name="IN-PROGRESS" color="blue" :arr="$store.state.inProgressCards"/>
+      <List name="ON-HOLD" color="#ecae0a" :arr="$store.state.onHoldCards"/>
+      <List name="IN-PROGRESS" color="#19339a" :arr="$store.state.inProgressCards"/>
       <List name="NEEDS-REVIEW" color="#cece00" :arr="$store.state.needsReviewCards"/>
-      <List name="APPROVED" color="green" :arr="$store.state.approvedCards"/>
+      <List name="APPROVED" color="#3b941d" :arr="$store.state.approvedCards"/>
     </div>
   </section>
 </template>

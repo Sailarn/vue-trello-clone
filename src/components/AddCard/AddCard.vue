@@ -3,17 +3,18 @@
     <div v-if="showInput" class="input-wrapper">
         <textarea
           v-model="cardInput"
-          placeholder="Ввести заголовок для этой карточки"
+          placeholder="Type some text for this card..."
         />
+      <span v-if="error" style="color: #f44336">Card cannot be empty</span>
       <div>
-        <button @click="addCard">Добавить карточку</button>
+        <button @click="addCard">Add card</button>
         <span @click="closeInput">X</span>
       </div>
     </div>
     <button
       v-else @click="showInput = true"
       class="add-card-btn"
-    >+ Добавить карточку
+    >+ Add card
     </button>
   </div>
 </template>
@@ -30,7 +31,8 @@
         data() {
             return {
                 showInput: false,
-                cardInput: ''
+                cardInput: '',
+                error: false
             };
         },
         methods: {
@@ -38,9 +40,15 @@
             closeInput() {
                 this.showInput = false;
                 this.cardInput = '';
+                this.error = false;
             },
             // add card to current list
             addCard() {
+                if (this.cardInput === '') {
+                    this.error = true;
+                    return;
+                }
+                this.error = false;
                 const itemCard = {
                     id: uuidv4().slice(0, 10),
                     text: this.cardInput,
