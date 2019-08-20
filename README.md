@@ -1,29 +1,7 @@
 # vue-trello-clone
+Small clone of trello.com
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Features
+* Adding/Deleting cards in lists
+* Dragging cards from one list to another
+* After reload changes will be saved to local storage
